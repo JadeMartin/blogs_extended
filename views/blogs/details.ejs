@@ -1,0 +1,46 @@
+<html lang="en">
+<%- include("../components/head.ejs") %>
+
+<body>
+  <%- include("../components/nav.ejs") %>
+
+  <div class="details content">
+    <h2><%= blog.title %></h2>
+    <div class="content">
+      <p><%= blog.body %></p>
+      <p> </p>
+      <p class="snippet">Written by <%= blog.author %></p>
+    </div>
+    <% if (user.email == blog.author) { %>
+        <button class="delete">Delete</button>
+        <a class="single" href="/blogs/update/<%= blog._id %>"> <button class="edit">Edit</button></a>
+    <% } %>
+  </div>
+
+  <%- include("../components/footer.ejs") %>
+
+</body>
+
+<script>
+  const deleteButton = document.querySelector('.delete');
+  deleteButton.addEventListener('click', async (e) => {
+  var url = window.location.pathname;
+  var id = url.substring(url.lastIndexOf('/') + 1);
+    try {
+      const res = await fetch('/blogs', {
+        method: 'DELETE',
+        body: JSON.stringify({ id }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await res.json();
+      if(data.blog){
+        location.assign('/');
+      }
+
+    } catch (err) {
+      console.log(err);
+    }
+  });
+</script>
+
+</html>
